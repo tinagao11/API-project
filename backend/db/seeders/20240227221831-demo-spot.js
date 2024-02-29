@@ -1,24 +1,19 @@
 'use strict';
+/** @type {import('sequelize-cli').Migration} */
+
 const {Spots}=require('../models');
 
-let options = {};
+let options = { tableName: 'Spots'};
+
 if (process.env.NODE_ENV === 'production') {
-  options.schema = process.env.SCHEMA;
+  options.schema = process.env.SCHEMA;  // define your schema in options object
 };
 
 
-/** @type {import('sequelize-cli').Migration} */
+
 module.exports = {
   async up (queryInterface, Sequelize) {
-    /**
-     * Add seed commands here.
-     *
-     * Example:
-     * await queryInterface.bulkInsert('People', [{
-     *   name: 'John Doe',
-     *   isBetaMember: false
-     * }], {});
-    */
+
    await Spots.bulkCreate([
     {
       ownerId: 1,
@@ -26,8 +21,8 @@ module.exports = {
       city: 'town1',
       state: 'Anystate',
       country: 'Anycountry',
-      lat: 40.7128,
-      lng: -74.0060,
+      lat: 40,
+      lng: -74,
       name: 'Central Spot',
       description: 'A cozy spot in the center of the city.',
       price: 100.00,
@@ -38,8 +33,8 @@ module.exports = {
       city: 'town2',
       state: 'Otherstate',
       country: 'Othercountry',
-      lat: 34.0522,
-      lng: -118.2437,
+      lat: 34,
+      lng: -118,
       name: 'Beachside Spot',
       description: 'Beautiful views of the ocean.',
       price: 200.00,
@@ -51,27 +46,33 @@ module.exports = {
       city: 'town3',
       state: 'Smallstate',
       country: 'Smallcountry',
-      lat: 37.7749,
-      lng: -122.4194,
+      lat: 37,
+      lng: -122,
       name: 'Urban Spot',
       description: 'Experience the heart of the city.',
       price: 150.00,
 
+    },
+    {
+      ownerId: 1,
+      address: '303 Crystal Lake',
+      city: 'Reflection',
+      state: 'Clarity',
+      country: 'Serenity',
+      lat: 60,
+      lng: -120,
+      name: 'Lakeview Retreat',
+      description: 'Find clarity and peace by the serene Crystal Lake. Reflections that tell stories of the soul.',
+      price: 500.99
+
     }
-   ])
+   ],options,{validate:true})
   },
 
   async down (queryInterface, Sequelize) {
-    /**
-     * Add commands to revert seed here.
-     *
-     * Example:
-     * await queryInterface.bulkDelete('People', null, {});
-     */
-    options.tableName = 'Spots';
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete(options, {
-      city: { [Op.in]: ['town1', 'town2', 'town3'] }
+      ownerId: { [Op.in]: [1,2,3] }
     }, {});
   }
 };
